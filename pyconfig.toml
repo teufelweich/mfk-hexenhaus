@@ -1,0 +1,15 @@
+[file_locations]
+TV_ON_VIDEO = '/local/marius/Downloads/TV turn ON effect [gp5DWmsXUtw].webm'
+CLIP_LIST = 'clips.csv'
+
+[servo]
+gpio_pin = 11
+start_pos = 0 # degree
+end_pos = 180 # degree
+time = 1 # second
+
+[led]
+wled_url = '192.168.0.11'
+
+[water]
+gpio_pin = 13

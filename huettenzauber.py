@@ -2,6 +2,11 @@ from python_mpv_jsonipc import MPV
 from argparse import ArgumentParser
 import random
 import time
+import tomllib
+
+CONFIG = None
+with open ('pyconfig.toml', 'rb') as f:
+    CONFIG = tomllib.load(f)
 
 VIDEO_PATHS = ['/local/marius/Downloads/The Rotating Moon [bDgVFwWBSVg].mkv',
                '/local/marius/Downloads/mfk-videos/A girl opens a bottle of champagne Fail [YGgx7x8VCKo].webm',
@@ -37,7 +42,7 @@ def play_random_video(mpv: MPV):
     # add files to playlist
     mpv.command('loadfile' , TV_ON_VIDEO, 'append-play')
     mpv.command('loadfile' , video_path, 'append')
-    
+
     check_pause(mpv, 'TV_ON')
     time.sleep(10)
 
@@ -74,6 +79,7 @@ def main():
 if __name__ == '__main__':
     max_retries = 10
     retries = 1
+    print(CONFIG)
     while True:
         try:
             main()
