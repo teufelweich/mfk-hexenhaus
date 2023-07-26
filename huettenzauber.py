@@ -142,16 +142,8 @@ async def main():
     args = parse_args()
     # Use MPV that is running and connected to /tmp/mpv-socket.
     mpv = MPV(start_mpv=False, ipc_socket=f"/tmp/mpv-socket-{args.screen}")
-    # await mpv.start()
-    # print('get volume')
-    # response = await mpv.send(['get_property','ao-volume'])
-    # print('audio volume', response)
-
-    # response = await mpv.send(['set_property','ao-volume', str(args.volume)])
-    # print('audio response', response)
-
-    # response = await mpv.send(['get_property','ao-volume'])
-    # print('audio volume', response)
+    
+    mpv.volume = args.volume
 
     for i in range(10):
         scene = random.choice(SCENE_CSV)
