@@ -146,7 +146,7 @@ async def main():
     mpv.volume = args.volume
 
     for i in range(10):
-        scene = random.choice(SCENE_CSV)
+        scene = random.choices(SCENE_CSV, [int(scene['probability_weight']) for scene in SCENE_CSV], k=1)[0]
 
         await run_scene(mpv, scene)
         await asyncio.sleep(5)

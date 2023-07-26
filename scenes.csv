@@ -1,8 +1,8 @@
-clip_path,clip_name,frequency,wled_command,fog_steps,water_steps
-/local/marius/Downloads/The Rotating Moon [bDgVFwWBSVg].mkv,Rotating Moon,100,white,0-30-5,0
-/local/marius/Downloads/Sneezing Baby Panda ｜ Original Video [93hq0YU3Gqk].webm,Sneezing Panda,100,gray,0,20-3-30
+clip_path,clip_name,probability_weight,wled_command,fog_steps,water_steps
+/local/marius/Downloads/The Rotating Moon [bDgVFwWBSVg].mkv,Rotating Moon,5,white,0-30-5,0
+/local/marius/Downloads/Sneezing Baby Panda ｜ Original Video [93hq0YU3Gqk].webm,Sneezing Panda,10,gray,0,20-3-30
 /local/marius/Downloads/mfk-videos/A girl opens a bottle of champagne Fail [YGgx7x8VCKo].webm,Champagne,100,yellow,20-3-1,20-10-30
 /local/marius/Downloads/Epic Turtle Jump [ZwipCJoWpsQ].webm,Epic Turtle Jump,100,green,0,20-20-1
-/local/marius/Downloads/Derp Animals [CNj6u3eOEzY].webm,Derp Animals,100,red,0,0
-/local/marius/Downloads/Animals Being Derps pt. 8 [OzIoOABfIq0].webm,Derp Animals 2,100,blue,0,0
-/local/marius/Downloads/A tiny angry squeaking Frog 🐸 ｜ Super Cute Animals - BBC [HBxn56l9WcU].webm,Angry Frog,100,sand,0,0
+/local/marius/Downloads/Derp Animals [CNj6u3eOEzY].webm,Derp Animals,50,red,0,0
+/local/marius/Downloads/Animals Being Derps pt. 8 [OzIoOABfIq0].webm,Derp Animals 2,50,blue,0,0
+/local/marius/Downloads/A tiny angry squeaking Frog 🐸 ｜ Super Cute Animals - BBC [HBxn56l9WcU].webm,Angry Frog,10,sand,0,0
