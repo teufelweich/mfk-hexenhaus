@@ -62,6 +62,7 @@ async def play_wled(command):
 
 async def play_fog(steps):
     pin = CONFIG['servo']['pin']
+    print('trying fog')
     try:
         pi = asyncio.pi()
         print('await pigpio connection ...')
