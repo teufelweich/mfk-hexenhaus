@@ -106,6 +106,7 @@ async def play_fog(steps):
         await pi.set_PWM_dutycycle(pin, rest_duty)
         await pi.set_PWM_dutycycle(pin, off_duty)
         print('FOG FINAL OFF')
+        await pi.set_mode(pin, asyncpio.INPUT)
         await pi.stop()
 
 
