@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 from argparse import ArgumentParser
 import random
 import time
@@ -51,6 +52,7 @@ async def play_wled(command):
     try:
         print('send command to wled')
         # TODO send command to config['led']['wled_url]
+        # probably use https://docs.aiohttp.org/en/stable/
         await asyncio.sleep(1)
     finally:
         # TODO turn wled off

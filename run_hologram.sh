@@ -1,0 +1,1 @@
+mpv --profile=hologram --playlist=hologram_playlist.txt

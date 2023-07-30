@@ -13,3 +13,6 @@ wled_url = '192.168.0.11'
 
 [water]
 gpio_pin = 13
+
+[buttons]
+gpio_pins = [15, 16, 17, 18]
