@@ -92,6 +92,9 @@ async def play_fog(steps):
             await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
             # keep fog off for steps[2] seconds
             await asyncio.sleep(steps[2])
+    except Exception as e:
+        print(e)
+        raise
 
     finally:
         # turn fog off
