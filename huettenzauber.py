@@ -64,7 +64,9 @@ async def play_fog(steps):
     pin = CONFIG['servo']['pin']
     try:
         pi = asyncio.pi()
+        print('await pigpio connection ...')
         await pi.connect()
+        print('got pigpio connection')
 
         await pi.set_PWM_frequency(pin, CONFIG['servo']['pwm_frequency'])
         await pi.set_PWM_range(pin, CONFIG['servo']['pwm_range'])
@@ -128,6 +130,7 @@ async def run_scene(mpv, scene):
 
         # create concurrent tasks
         fog_steps = parse_steps(scene['fog_steps'])
+        print(fog_steps)
         if fog_steps:
             fog_task = asyncio.create_task(play_fog(fog_steps), name='fog_task')
             background_tasks.add(fog_task)
