@@ -72,6 +72,8 @@ async def play_fog(steps):
         await pi.connect()
         print('got pigpio connection')
 
+        await pi.set_mode(pin, asyncpio.OUTPUT)
+
         await pi.set_PWM_frequency(pin, pwm_frequency)
         await pi.set_PWM_range(pin, int(CONFIG['servo']['pwm_range']))
 
