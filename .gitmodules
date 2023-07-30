@@ -1,6 +1,6 @@
 [submodule "servo_as"]
 	path = servo_as
-	url = git@github.com:teufelweich/servo_as.git
+	url = https://github.com/teufelweich/servo_as.git
 [submodule "asyncpio"]
 	path = asyncpio
 	url = https://github.com/spthm/asyncpio.git
