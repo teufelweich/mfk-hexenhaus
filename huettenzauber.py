@@ -2,7 +2,7 @@
 from argparse import ArgumentParser
 import random
 import time
-import tomllib
+import configparser
 import csv
 from pprint import pprint
 import asyncio
@@ -11,10 +11,8 @@ from typing import Tuple
 from python_mpv_jsonipc import MPV
 import asyncpio
 
-CONFIG = None
-with open ('pyconfig.toml', 'rb') as f:
-    CONFIG = tomllib.load(f)
-assert CONFIG is not None, 'failed to load config'
+CONFIG = configparser.ConfigParser()
+CONFIG.read('pyconfig.ini')
 
 SCENE_CSV = []
 with open(CONFIG['file_locations']['SCENE_LIST'], 'r') as csv_file:
