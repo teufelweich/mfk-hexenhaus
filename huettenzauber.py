@@ -61,7 +61,10 @@ async def play_wled(command):
         print('turn wled off')
 
 async def play_fog(steps):
-    pin = CONFIG['servo']['gpio_pin']
+    pin = int(CONFIG['servo']['gpio_pin'])
+    pwm_frequency = int(CONFIG['servo']['pwm_frequency'])
+    rest_duty = int(CONFIG['servo']['rest_duty'])
+    off_duty = int(CONFIG['servo']['off_duty'])
     print('trying fog')
     try:
         pi = asyncpio.pi()
@@ -69,12 +72,12 @@ async def play_fog(steps):
         await pi.connect()
         print('got pigpio connection')
 
-        await pi.set_PWM_frequency(pin, CONFIG['servo']['pwm_frequency'])
-        await pi.set_PWM_range(pin, CONFIG['servo']['pwm_range'])
+        await pi.set_PWM_frequency(pin, pwm_frequency)
+        await pi.set_PWM_range(pin, int(CONFIG['servo']['pwm_range']))
 
         # set servo to off position
-        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['rest_duty'])
-        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
+        await pi.set_PWM_dutycycle(pin, rest_duty)
+        await pi.set_PWM_dutycycle(pin, off_duty)
         # wait for the initial delay until starting fog
         print('wait until FOG ON for', steps[0], 's')
         await asyncio.sleep(steps[0])
@@ -82,14 +85,14 @@ async def play_fog(steps):
         while True:
             # turn fog on
             print('FOG ON for', steps[1], 's')
-            await pi.set_PWM_dutycycle(pin, CONFIG['servo']['on_duty'])
+            await pi.set_PWM_dutycycle(pin, int(CONFIG['servo']['on_duty']))
             # keep fog on for steps[1] seconds
             await asyncio.sleep(steps[1])
 
             # turn fog off
             print('FOG OFF for', steps[2], 's')
-            await pi.set_PWM_dutycycle(pin, CONFIG['servo']['rest_duty'])
-            await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
+            await pi.set_PWM_dutycycle(pin, rest_duty)
+            await pi.set_PWM_dutycycle(pin, off_duty)
             # keep fog off for steps[2] seconds
             await asyncio.sleep(steps[2])
     except Exception as e:
@@ -98,8 +101,8 @@ async def play_fog(steps):
 
     finally:
         # turn fog off
-        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['rest_duty'])
-        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
+        await pi.set_PWM_dutycycle(pin, rest_duty)
+        await pi.set_PWM_dutycycle(pin, off_duty)
         print('FOG FINAL OFF')
         await pi.stop()
 
