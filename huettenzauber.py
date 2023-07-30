@@ -61,12 +61,12 @@ async def play_wled(command):
         print('turn wled off')
 
 async def play_fog(steps):
-    pin = int(CONFIG['servo']['gpio_pin'])
-    pwm_frequency = int(CONFIG['servo']['pwm_frequency'])
-    rest_duty = int(CONFIG['servo']['rest_duty'])
-    off_duty = int(CONFIG['servo']['off_duty'])
     print('trying fog')
     try:
+        pin = int(CONFIG['servo']['gpio_pin'])
+        pwm_frequency = int(CONFIG['servo']['pwm_frequency'])
+        rest_duty = int(CONFIG['servo']['rest_duty'])
+        off_duty = int(CONFIG['servo']['off_duty'])
         pi = asyncpio.pi()
         print('await pigpio connection ...')
         await pi.connect()
