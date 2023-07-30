@@ -9,6 +9,7 @@ import asyncio
 from typing import Tuple
 
 from python_mpv_jsonipc import MPV
+import asyncpio
 
 CONFIG = None
 with open ('pyconfig.toml', 'rb') as f:
@@ -59,25 +60,41 @@ async def play_wled(command):
         print('turn wled off')
 
 async def play_fog(steps):
+    pin = CONFIG['servo']['pin']
     try:
+        pi = asyncio.pi()
+        await pi.connect()
+
+        await pi.set_PWM_frequency(pin, CONFIG['servo']['pwm_frequency'])
+        await pi.set_PWM_range(pin, CONFIG['servo']['pwm_range'])
+
+        # set servo to off position
+        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['rest_duty'])
+        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
         # wait for the initial delay until starting fog
         print('wait until FOG ON for', steps[0], 's')
         await asyncio.sleep(steps[0])
 
         while True:
-            # TODO turn fog on
+            # turn fog on
             print('FOG ON for', steps[1], 's')
+            await pi.set_PWM_dutycycle(pin, CONFIG['servo']['on_duty'])
             # keep fog on for steps[1] seconds
             await asyncio.sleep(steps[1])
 
-            # TODO turn fog off
+            # turn fog off
             print('FOG OFF for', steps[2], 's')
+            await pi.set_PWM_dutycycle(pin, CONFIG['servo']['rest_duty'])
+            await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
             # keep fog off for steps[2] seconds
             await asyncio.sleep(steps[2])
 
     finally:
-        # TODO turn fog off
+        # turn fog off
+        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['rest_duty'])
+        await pi.set_PWM_dutycycle(pin, CONFIG['servo']['off_duty'])
         print('FOG FINAL OFF')
+        await pi.stop()
 
 
 async def play_water(steps):
