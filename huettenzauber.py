@@ -6,10 +6,13 @@ import configparser
 import csv
 from pprint import pprint
 import asyncio
+from os.path import expanduser
 from typing import Tuple
 
 from python_mpv_jsonipc import MPV
 import asyncpio
+
+HOME_PATH = expanduser('~')
 
 CONFIG = configparser.ConfigParser()
 CONFIG.read('pyconfig.ini')
@@ -44,8 +47,8 @@ def play_video(mpv: MPV, clip_path: str, clip_name: str):
     # add files to playlist
     # await mpv.send(['loadfile', CONFIG['file_locations']['TV_ON_VIDEO'], 'append-play'])
     # await mpv.send(['loadfile', clip_path, 'append'])
-    mpv.command('loadfile', CONFIG['file_locations']['TV_ON_VIDEO'], 'append-play')
-    mpv.command('loadfile', clip_path, 'append')
+    mpv.command('loadfile', CONFIG['file_locations']['TV_ON_VIDEO'].replace('~', HOME_PATH), 'append-play')
+    mpv.command('loadfile', clip_path.replace('~', HOME_PATH), 'append')
 
 async def play_wled(command):
     try:
