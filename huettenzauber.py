@@ -27,8 +27,6 @@ with open(CONFIG['file_locations']['SCENE_LIST'], 'r') as csv_file:
     SCENE_CSV = [ r for r in csv_reader]
 assert len(SCENE_CSV) > 0, 'no clips inside clip csv'
 
-PI = asyncpio.pi()
-
 
 def parse_args():
     parser = ArgumentParser()
@@ -75,14 +73,18 @@ async def play_fog(steps):
         rest_duty = int(CONFIG['servo']['rest_duty'])
         off_duty = int(CONFIG['servo']['off_duty'])
 
-        await PI.set_mode(pin, asyncpio.OUTPUT)
+        pi = asyncpio.pi()
 
-        await PI.set_PWM_frequency(pin, pwm_frequency)
-        await PI.set_PWM_range(pin, int(CONFIG['servo']['pwm_range']))
+        await pi.connect()
+
+        await pi.set_mode(pin, asyncpio.OUTPUT)
+
+        await pi.set_PWM_frequency(pin, pwm_frequency)
+        await pi.set_PWM_range(pin, int(CONFIG['servo']['pwm_range']))
 
         # set servo to off position
-        await PI.set_PWM_dutycycle(pin, rest_duty)
-        await PI.set_PWM_dutycycle(pin, off_duty)
+        await pi.set_PWM_dutycycle(pin, rest_duty)
+        await pi.set_PWM_dutycycle(pin, off_duty)
         # wait for the initial delay until starting fog
         print('wait until FOG ON for', steps[0], 's')
         await asyncio.sleep(steps[0])
@@ -90,14 +92,14 @@ async def play_fog(steps):
         while True:
             # turn fog on
             print('FOG ON for', steps[1], 's')
-            await PI.set_PWM_dutycycle(pin, int(CONFIG['servo']['on_duty']))
+            await pi.set_PWM_dutycycle(pin, int(CONFIG['servo']['on_duty']))
             # keep fog on for steps[1] seconds
             await asyncio.sleep(steps[1])
 
             # turn fog off
             print('FOG OFF for', steps[2], 's')
-            await PI.set_PWM_dutycycle(pin, rest_duty)
-            await PI.set_PWM_dutycycle(pin, off_duty)
+            await pi.set_PWM_dutycycle(pin, rest_duty)
+            await pi.set_PWM_dutycycle(pin, off_duty)
             # keep fog off for steps[2] seconds
             await asyncio.sleep(steps[2])
     except Exception as e:
@@ -106,16 +108,23 @@ async def play_fog(steps):
 
     finally:
         # turn fog off
-        await PI.set_PWM_dutycycle(pin, rest_duty)
-        await PI.set_PWM_dutycycle(pin, off_duty)
+        await pi.set_PWM_dutycycle(pin, rest_duty)
+        await pi.set_PWM_dutycycle(pin, off_duty)
         print('FOG FINAL OFF')
-        await PI.set_mode(pin, asyncpio.INPUT)
+        await pi.set_mode(pin, asyncpio.INPUT)
+        await pi.stop()
+
 
 
 async def play_water(steps):
     try:
         pin = int(CONFIG['water']['gpio_pin'])
-        await PI.set_mode(pin, asyncpio.OUTPUT)
+        
+        pi = asyncpio.pi()
+
+        await pi.connect()
+
+        await pi.set_mode(pin, asyncpio.OUTPUT)
         # wait for the initial delay until starting water
         print('wait until WATER ON for', steps[0], 's')
         await asyncio.sleep(steps[0])
@@ -123,13 +132,13 @@ async def play_water(steps):
         while True:
             # turn water on
             print('WATER ON for', steps[1], 's')
-            await PI.write(pin, 1)
+            await pi.write(pin, 1)
             # keep water on for steps[1] seconds
             await asyncio.sleep(steps[1])
 
             # turn water off
             print('WATER OFF for', steps[2], 's')
-            await PI.write(pin, 0)
+            await pi.write(pin, 0)
             # keep water off for steps[2] seconds
             await asyncio.sleep(steps[2])
     except Exception as e:
@@ -138,8 +147,9 @@ async def play_water(steps):
 
     finally:
         # turn water off
-        await PI.write(pin, 0)
+        await pi.write(pin, 0)
         print('WATER FINAL OFF')
+        await pi.stop()
 
 async def run_scene(scene):
     background_tasks = set()
