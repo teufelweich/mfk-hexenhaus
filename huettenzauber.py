@@ -43,7 +43,8 @@ def parse_steps(steps: str) -> Tuple:
         assert len(s) == 3, f'need 3 intervals not {steps}'
         return [int(i) for i in s]
 
-def play_video(mpv: MPV, clip_path: str, clip_name: str):
+def play_video(clip_path: str, clip_name: str):
+    global mpv
     print('stop current video output and play new clip', clip_name)
     # stops video and clears playlist
     # await mpv.send(['stop'])
@@ -156,7 +157,7 @@ async def run_scene(scene):
     print(f'\n-----------------\nstart playing scene {scene["clip_name"]} with wled_cmd={scene["wled_command"]} fog_steps={scene["fog_steps"]} water_steps={scene["water_steps"]}')
     try:
         # play clip on screen
-        play_video(mpv, scene['clip_path'], scene['clip_name'])
+        play_video(scene['clip_path'], scene['clip_name'])
 
         # create concurrent tasks
         fog_steps = parse_steps(scene['fog_steps'])
@@ -185,47 +186,71 @@ async def run_scene(scene):
             print(f'remaining {remaining_time}s to play')
             await asyncio.sleep(mpv.playtime_remaining / 2)
 
+    except Exception as e:
+        print(e)
+        raise
+
+
     finally:
         for task in background_tasks:
             print('cancelling task', task.get_name())
             task.cancel()
 
 async def user_button_pressed(pin, level, tick):
-    print(f'pin {pin} changed to level {level}')
-    # read all buttons
-    buttons_levels = {}
-    for pin in BUTTONS:
-        buttons_levels[pin] = await PI.read(pin)
-    if all(buttons_levels.values()): # all buttons are pressed
-        # disable all callbacks and remove them from the set
-        while buttons_callbacks:
-            cb = buttons_callbacks.pop()
-            await cb.cancel()
-        
-        # run new scene
-        scene = random.choices(SCENE_CSV, [int(scene['probability_weight']) for scene in SCENE_CSV], k=1)[0]
-        await run_scene(mpv, scene)
+    try:
+        global buttons_callbacks
+        print(f'pin {pin} changed to level {level}')
+        pi = asyncpio.pi()
+
+        await pi.connect()
+        # read all buttons
+        buttons_levels = {}
+        for pin in BUTTONS:
+            buttons_levels[pin] = await pi.read(pin)
+        if all(buttons_levels.values()): # all buttons are pressed
+            print('all buttons pressed, start scene')
+            
+            # run new scene
+            print('run scene')
+            scene = random.choices(SCENE_CSV, [int(scene['probability_weight']) for scene in SCENE_CSV], k=1)[0]
+            await run_scene(scene)
+
+            # disable all callbacks and remove them from the set
+            while buttons_callbacks:
+                cb = buttons_callbacks.pop()
+                await cb.cancel()
+        await pi.stop()
+    except Exception as e:
+        print(e)
+        raise e
 
 
 async def main():
+    global buttons_callbacks, mpv
+
     args = parse_args()
     # Use MPV that is running and connected to /tmp/mpv-socket.
     mpv = MPV(start_mpv=False, ipc_socket=f"/tmp/mpv-socket-{args.screen}")
     
     mpv.volume = args.volume
 
+    pi = asyncpio.pi()
+
+    await pi.connect()
+
     try:
-        await PI.connect()
+        await pi.connect()
 
         for pin in BUTTONS: # setup gpio for buttons
-            await PI.set_mode(pin, asyncpio.INPUT)
-            await PI.set_pull_up_down(pin, asyncpio.PUD_DOWN)  # read 0 when not pressed, read 1 when pressed
+            await pi.set_mode(pin, asyncpio.INPUT)
+            await pi.set_pull_up_down(pin, asyncpio.PUD_DOWN)  # read 0 when not pressed, read 1 when pressed
 
         while True:
             await asyncio.sleep(int(CONFIG['buttons']['delay']))
             if len(buttons_callbacks) == 0:
+                print('setting callbacks')
                 for pin in BUTTONS:
-                    button_callbacks.add(await PI.callback(pin, edge=asyncpio.RISING_EDGE, func=user_button_pressed))
+                    buttons_callbacks.add(await pi.callback(pin, edge=asyncpio.RISING_EDGE, func=user_button_pressed))
             await asyncio.sleep(0.1)
 
     finally:
@@ -233,7 +258,7 @@ async def main():
         while buttons_callbacks:
             cb = buttons_callbacks.pop()
             await cb.cancel()
-        await PI.stop()
+        await pi.stop()
 
     
 
@@ -247,7 +272,7 @@ if __name__ == '__main__':
     pprint(SCENE_CSV)
     while True:
         try:
-            asyncio.run(main())
+            asyncio.run(main(), debug=True)
         except ConnectionRefusedError as e:
             print('no MPV IPC socket available, please start MPV, retry in 10 seconds')
             time.sleep(10)
