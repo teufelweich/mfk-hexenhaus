@@ -1,3 +1,2 @@
-DISPLAY=:0 mpv --profile=tiktok
 sudo pigpiod
-python huettenzauber.py
+(trap 'kill 0' SIGINT; DISPLAY=:0 mpv --profile=tiktok & python huettenzauber.py)
