@@ -1,0 +1,24 @@
+Servo:
++ - 5V PI
+GND - GND PI
+Signal - GPIO 18
+
+
+Knöpfe:
+1: GPIO 6 (PIN 31)
+2: GPIO 13 (PIN 33) 
+3: GPIO 19 (PIN 35)
+4: GPIO 26 (PIN 37)
+
+Pumpe:
++ - V+ PowerSupply
+GND - NO Relais
+
+Relais:
+D1 (Schaltsignal) - GPIO 5 (PIN 29)
+5V - 5V PI
+NO - GND Pumpe
+COM GND (Mitte) - PowerSupply V-
+
+
+LED:
