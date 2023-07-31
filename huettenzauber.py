@@ -8,6 +8,7 @@ from pprint import pprint
 import asyncio
 from os.path import expanduser
 from typing import Tuple
+import json
 
 from python_mpv_jsonipc import MPV
 import asyncpio
@@ -16,6 +17,9 @@ HOME_PATH = expanduser('~')
 
 CONFIG = configparser.ConfigParser()
 CONFIG.read('pyconfig.ini')
+BUTTONS = json.loads(CONFIG['buttons']['gpio_pins'])
+buttons_callbacks = set()
+mpv = None
 
 SCENE_CSV = []
 with open(CONFIG['file_locations']['SCENE_LIST'], 'r') as csv_file:
@@ -137,7 +141,7 @@ async def play_water(steps):
         await PI.write(pin, 0)
         print('WATER FINAL OFF')
 
-async def run_scene(mpv, scene):
+async def run_scene(scene):
     background_tasks = set()
     print(f'\n-----------------\nstart playing scene {scene["clip_name"]} with wled_cmd={scene["wled_command"]} fog_steps={scene["fog_steps"]} water_steps={scene["water_steps"]}')
     try:
@@ -176,6 +180,22 @@ async def run_scene(mpv, scene):
             print('cancelling task', task.get_name())
             task.cancel()
 
+async def user_button_pressed(pin, level, tick):
+    print(f'pin {pin} changed to level {level}')
+    # read all buttons
+    buttons_levels = {}
+    for pin in BUTTONS:
+        buttons_levels[pin] = await PI.read(pin)
+    if all(buttons_levels.values()): # all buttons are pressed
+        # disable all callbacks and remove them from the set
+        while buttons_callbacks:
+            cb = buttons_callbacks.pop()
+            await cb.cancel()
+        
+        # run new scene
+        scene = random.choices(SCENE_CSV, [int(scene['probability_weight']) for scene in SCENE_CSV], k=1)[0]
+        await run_scene(mpv, scene)
+
 
 async def main():
     args = parse_args()
@@ -184,12 +204,27 @@ async def main():
     
     mpv.volume = args.volume
 
-    for i in range(10):
-        scene = random.choices(SCENE_CSV, [int(scene['probability_weight']) for scene in SCENE_CSV], k=1)[0]
+    try:
         await PI.connect()
-        await run_scene(mpv, scene)
-        await asyncio.sleep(5)
+
+        for pin in BUTTONS: # setup gpio for buttons
+            await PI.set_mode(pin, asyncpio.INPUT)
+            await PI.set_pull_up_down(pin, asyncpio.PUD_DOWN)  # read 0 when not pressed, read 1 when pressed
+
+        while True:
+            await asyncio.sleep(int(CONFIG['buttons']['delay']))
+            if len(buttons_callbacks) == 0:
+                for pin in BUTTONS:
+                    button_callbacks.add(await PI.callback(pin, edge=asyncpio.RISING_EDGE, func=user_button_pressed))
+            await asyncio.sleep(0.1)
+
+    finally:
+        # disable all callbacks and remove them from the set
+        while buttons_callbacks:
+            cb = buttons_callbacks.pop()
+            await cb.cancel()
         await PI.stop()
+
     
 
 
