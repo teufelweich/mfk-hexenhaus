@@ -1,0 +1,15 @@
+[Unit]
+Description=MFK-Huettenzauber
+Documentation=nope
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/mfk-hexenhaus
+ExecStart=/home/pi/mfk-hexenhaus/run_tiktok.sh
+Restart=on-failure
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target
+Alias=huettenzauber.service
