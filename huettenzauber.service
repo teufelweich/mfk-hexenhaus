@@ -1,12 +1,12 @@
 [Unit]
 Description=MFK-Huettenzauber
-Documentation=nope
-After=network.target
+After=network.target 
+Requires=mpv-huettenzauber.service
 
 [Service]
 WorkingDirectory=/home/pi/mfk-hexenhaus
-ExecStart=/home/pi/mfk-hexenhaus/run_tiktok.sh
-Restart=on-failure
+ExecStart=/home/pi/mfk-hexenhaus/huettenzauber.py
+Restart=always
 User=pi
 Group=pi
 
