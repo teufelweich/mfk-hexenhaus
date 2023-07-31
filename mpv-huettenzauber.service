@@ -1,6 +1,6 @@
 [Unit]
 Description=MFK-Huettenzauber MPV
-After=network.target
+After=network.target default final.target graphical.target systemd-user-sessions.service plymouth-quit-wait.service
 
 [Service]
 WorkingDirectory=/home/pi/mfk-hexenhaus
