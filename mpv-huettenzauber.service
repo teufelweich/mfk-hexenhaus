@@ -1,0 +1,14 @@
+[Unit]
+Description=MFK-Huettenzauber MPV
+After=network.target default systemd-user-sessions.service plymouth-quit-wait.service
+
+[Service]
+WorkingDirectory=/home/pi/mfk-hexenhaus
+ExecStart=/bin/bash -c "DISPLAY=:0 mpv --profile=tiktok"
+Restart=always
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target
+Alias=mpv-huettenzauber.service

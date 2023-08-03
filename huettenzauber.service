@@ -1,0 +1,16 @@
+[Unit]
+Description=MFK-Huettenzauber
+After=network.target
+Requires=mpv-huettenzauber.service
+PartOf=mpv-huettenzauber.service
+
+[Service]
+WorkingDirectory=/home/pi/mfk-hexenhaus
+ExecStart=/home/pi/mfk-hexenhaus/huettenzauber.py
+Restart=always
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target
+Alias=huettenzauber.service
