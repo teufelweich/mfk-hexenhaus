@@ -1,8 +1,32 @@
 clip_path,clip_name,probability_weight,wled_command,fog_steps,water_steps
-~/Videos/The Rotating Moon [bDgVFwWBSVg].mkv,Rotating Moon,5,/&T,0-30-5,2-1-4
-~/Videos/Sneezing Baby Panda ｜ Original Video [93hq0YU3Gqk].webm,Sneezing Panda,10,/&T,1-1-5,2-1-4
-~/Videos/A girl opens a bottle of champagne Fail [YGgx7x8VCKo].webm,Champagne,100,/&T,20-3-1,2-1-4
-~/Videos/Epic Turtle Jump [ZwipCJoWpsQ].webm,Epic Turtle Jump,100,/&T,1-1-5,2-1-4
-~/Videos/Derp Animals [CNj6u3eOEzY].webm,Derp Animals,50,/&T,1-1-5,2-1-4
-~/Videos/Animals Being Derps pt. 8 [OzIoOABfIq0].webm,Derp Animals 2,50,/&T,1-1-5,2-1-4
-~/Videos/A tiny angry squeaking Frog 🐸 ｜ Super Cute Animals - BBC [HBxn56l9WcU].webm,Angry Frog,10,/&T,1-1-5,2-1-4
+/media/pi/MFKKYVID/Videos/Die Antwoord.mp4,Antwoord,100,/win&FP=12&A=50,1-5-30,0
+/media/pi/MFKKYVID/Videos/Double King.mp4,King,30,/win&FP=15&A=20,0,0
+/media/pi/MFKKYVID/Videos/Durchkaemmt.mp4,Durchkaemmt,20,/win&FP=17&A=20,0,0
+/media/pi/MFKKYVID/Videos/Flute.mp4,Flute,50,/win&FP=10&FX=5&SX=200&IX=200&A=200,1-5-30,0
+/media/pi/MFKKYVID/Videos/Fraktale1.mp4,Fraktale1,100,/win&FP=13&A=0,0,0
+/media/pi/MFKKYVID/Videos/Fraktale2.mp4,Fraktale2,100,/win&FP=13&A=0,0,0
+/media/pi/MFKKYVID/Videos/Grand Canyon.mp4,Grand Canyon,20,/win&FP=17&A=20,0,0
+/media/pi/MFKKYVID/Videos/Hier nen Euro.mp4,Euro,80,/win&FP=14&A=20,0,0
+/media/pi/MFKKYVID/Videos/KI Heidi.mp4,Heidi,60,/win&FP=14&A=20,0,0
+/media/pi/MFKKYVID/Videos/Rasputin.mp4,Rasputin,100,/win&FX=8&SX=200&IX=200&A=200,1-5-30,0
+/media/pi/MFKKYVID/Videos/Round Planet.mp4,Planet,60,/win&FP=37&A=20,0,0
+/media/pi/MFKKYVID/Videos/Runde Tiere.mp4,Tiere,40,/win&FP=37&A=20,0,0
+/media/pi/MFKKYVID/Videos/Schauen wir mal.mp4,Schauen wir mal,15,/win&FP=47&A=20,0,0
+/media/pi/MFKKYVID/Videos/Sumday Weval.mp4,Sumday,100,/win&FP=15&A=20,0,0
+/media/pi/MFKKYVID/Videos/Tagesschau Intro.mp4,Tagesschau,20,/win&FP=7&A=10,0,0
+/media/pi/MFKKYVID/Videos/Titanic.mp4,Titanic,80,/win&FP=9&A=20,0,0
+/media/pi/MFKKYVID/Videos/Toxibombs.mp4,Toxibombs,90,/win&FP=6&FX=11&SX=200&A=50,1-10-10,0
+/media/pi/MFKKYVID/Videos/Ygor.mp4,Ygor,40,/win&FP=61&A=20,20-5-20,0
+/home/pi/Videos/frosch.webm,Frosch,100,/win&FP=17&A=20,0,0
+/media/pi/MFKKYVID/Videos/Double King2.mp4,King2,30,/win&FP=15&A=20,0,0
+/media/pi/MFKKYVID/Videos/Elephants.mp4,Elephant,20,/win&FP=15&A=20,0,0
+/media/pi/MFKKYVID/Videos/Vladimir.mp4,Vladimir,60,/win&FP=12&A=50,1-5-30,0
+/media/pi/MFKKYVID/Videos/kaese_h264.mp4,Kaese,40,/win&FP=20&A=20,0,0
+/media/pi/MFKKYVID/Videos/chili-peppers_h264.mp4,ChiliPeppers,15,/win&FP=15&A=20,0,0
+/media/pi/MFKKYVID/Videos/nicer_dicer_h264.mp4,NicerDicer,20,/win&FP=27&A=20,0,0
+/media/pi/MFKKYVID/Videos/luksan-wunder-toerichte-tiere.mp4,toerichteTiere,50,/win&FP=10&A=20,0,0
+/media/pi/MFKKYVID/Videos/max-cooper-optics.mp4,opticsCooper,20,/win&FP=15&A=20,0,0
+/media/pi/MFKKYVID/Videos/Mittelalter-coffin-dance.mp4,CoffinDance,40,/win&FX=8&SX=50&A=70,0,0
+/media/pi/MFKKYVID/Videos/woodys-fichtls-lied.mp4,FichtlsLied,10,/win&FP=10&A=20,0,0
+/media/pi/MFKKYVID/Videos/quallendisco.mp4,Quallendisco,20,/win&FX=8&SX=200&A=70,0,0
+/media/pi/MFKKYVID/Videos/buster-keaton.mp4,BusterKeaton,50,/win&FP=15&A=20,0,0

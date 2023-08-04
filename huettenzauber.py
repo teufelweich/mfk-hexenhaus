@@ -6,7 +6,7 @@ import configparser
 import csv
 from pprint import pprint
 import asyncio
-from os.path import expanduser
+from os.path import expanduser, isfile
 from typing import Tuple
 import json
 
@@ -56,28 +56,22 @@ def play_video(clip_path: str, clip_name: str):
     # await mpv.send(['loadfile', clip_path, 'append'])
     mpv.command('loadfile', CONFIG['file_locations']['TV_ON_VIDEO'].replace('~', HOME_PATH), 'append-play')
     mpv.command('loadfile', clip_path.replace('~', HOME_PATH), 'append')
+    mpv.command('loadfile', CONFIG['file_locations']['TV_OFF_VIDEO'].replace('~', HOME_PATH), 'append')
+
+
+async def wled_idle():
+    async with aiohttp.ClientSession() as session:
+            async with session.get(CONFIG['led']['wled_url']+CONFIG['led']['off_command']):
+                print('reset wled with:', CONFIG['led']['wled_url']+CONFIG['led']['off_command'])
+                pass
 
 async def play_wled(command):
-    try:
-        print(f'send command {command} to wled')
-        # send command to config['led']['wled_url]
-        async with aiohttp.ClientSession() as session:
-            async with session.get(CONFIG['led']['wled_url']+command):
-                pass
-        while True:
-            await asyncio.sleep(60)
+    print(f'send command {command} to wled')
+    # send command to config['led']['wled_url]
+    async with aiohttp.ClientSession() as session:
+        async with session.get(CONFIG['led']['wled_url']+command):
+            pass
 
-    except Exception as e:
-        print(e)
-        raise
-    
-    finally:
-        # turn wled off
-        print('turn wled off')
-        async with aiohttp.ClientSession() as session:
-            async with session.get(CONFIG['led']['wled_url']+CONFIG['led']['off_command']):
-                pass
-        await session.close()
 
 async def play_fog(steps):
     print('trying fog')
@@ -185,8 +179,7 @@ async def run_scene(scene):
 
         wled_command = scene['wled_command']
         if wled_command:
-            wled_task = asyncio.create_task(play_wled(wled_command), name='wled_task')
-            background_tasks.add(wled_task)
+            await play_wled(wled_command)
 
         # give mpv time to load video and start playing before checking for scene end
         await asyncio.sleep(5)
@@ -194,6 +187,7 @@ async def run_scene(scene):
         while True:
             if mpv.idle_active: # idle means playing has finished so we stop the scene
                 print('currently idling, so finished playing')
+                await wled_idle()
                 break
 
             remaining_time = mpv.playtime_remaining
@@ -254,6 +248,7 @@ async def main():
     pi = asyncpio.pi()
 
     await pi.connect()
+    await wled_idle()
 
     try:
         await pi.connect()
@@ -287,9 +282,12 @@ if __name__ == '__main__':
     pprint(CONFIG)
     print(f'\n\nloaded clip csv with {len(SCENE_CSV)} clips')
     pprint(SCENE_CSV)
+    for scene in SCENE_CSV:
+        assert isfile(scene['clip_path']), f'path is wrong: {scene["clip_path"]}'
+
     while True:
         try:
-            asyncio.run(main(), debug=True)
+            asyncio.run(main(), debug=False)
         except ConnectionRefusedError as e:
             print('no MPV IPC socket available, please start MPV, retry in 10 seconds')
             time.sleep(10)
